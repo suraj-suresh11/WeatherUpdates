@@ -1,0 +1,49 @@
+# Ignore build output directories
+bin/
+obj/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore application secrets/settings
+appsettings.Development.json
+appsettings.Local.json
+
+# Ignore Visual Studio Code workspace settings
+.vscode/
+
+# Ignore other generated files
+*.pdb
+*.log
+*.lock.json
+*.cache/
+*.db
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Ignore Recycle Bin files
+$RECYCLE.BIN/
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore Rider/JetBrains specific files
+.idea/
+*.sln.iml
+
+# Ignore build artifacts
+*.dll
+*.exe
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+.nuget/
+packages/
