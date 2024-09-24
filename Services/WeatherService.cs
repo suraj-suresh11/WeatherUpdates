@@ -12,13 +12,18 @@ namespace WeatherUpdates.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IMemoryCache _cache;
-        private readonly string _apiKey = "5716e457c83745228d058ba39923148b";  
+        private readonly string _apiKey;
         private readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(5);
 
-        public WeatherService(HttpClient httpClient, IMemoryCache memoryCache)
+        public WeatherService(HttpClient httpClient, IMemoryCache memoryCache, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _cache = memoryCache;
+            _apiKey = configuration["WeatherApi:ApiKey"];
+            if (string.IsNullOrEmpty(_apiKey))
+            {
+                throw new ArgumentNullException(nameof(_apiKey), "Weather API key is missing in configuration.");
+            }
         }
 
         public async Task<WeatherData?> GetWeatherAsync(double latitude, double longitude)

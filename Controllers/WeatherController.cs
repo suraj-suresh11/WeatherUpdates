@@ -51,7 +51,7 @@ namespace WeatherUpdates.Controllers
 
             try
             {
-                // Retrieve weather data to get the actual temperature in Celsius
+          
                 var weatherData = await _weatherService.GetWeatherAsync(latitude, longitude);
 
                 if (weatherData == null)
@@ -59,7 +59,6 @@ namespace WeatherUpdates.Controllers
                     return NotFound("Weather data not found for the specified location.");
                 }
 
-                // Convert the temperature from Celsius to the desired unit
                 double convertedTemperature = _weatherService.ConvertTemperature(weatherData.Temperature, "C", toUnit);
 
                 return Ok(new { ConvertedTemperature = convertedTemperature, Unit = toUnit });
