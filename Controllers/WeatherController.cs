@@ -41,8 +41,8 @@ namespace WeatherUpdates.Controllers
             }
         }
 
-        [HttpGet("convert-temperature")]
-        public async Task<IActionResult> ConvertTemperature([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] string fromUnit, [FromQuery] string toUnit)
+         [HttpGet("convert-temperature")]
+        public async Task<IActionResult> ConvertTemperature([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] string toUnit)
         {
             if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180)
             {
@@ -51,7 +51,7 @@ namespace WeatherUpdates.Controllers
 
             try
             {
-                // Retrieve weather data to get the actual temperature
+                // Retrieve weather data to get the actual temperature in Celsius
                 var weatherData = await _weatherService.GetWeatherAsync(latitude, longitude);
 
                 if (weatherData == null)
@@ -59,8 +59,8 @@ namespace WeatherUpdates.Controllers
                     return NotFound("Weather data not found for the specified location.");
                 }
 
-                // Use the actual temperature from the weather data for conversion
-                double convertedTemperature = _weatherService.ConvertTemperature(weatherData.Temperature, fromUnit, toUnit);
+                // Convert the temperature from Celsius to the desired unit
+                double convertedTemperature = _weatherService.ConvertTemperature(weatherData.Temperature, "C", toUnit);
 
                 return Ok(new { ConvertedTemperature = convertedTemperature, Unit = toUnit });
             }

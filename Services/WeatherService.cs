@@ -13,7 +13,7 @@ namespace WeatherUpdates.Services
         private readonly HttpClient _httpClient;
         private readonly IMemoryCache _cache;
         private readonly string _apiKey = "5716e457c83745228d058ba39923148b";  
-        private readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(30);
+        private readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(5);
 
         public WeatherService(HttpClient httpClient, IMemoryCache memoryCache)
         {
