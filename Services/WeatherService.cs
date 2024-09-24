@@ -1,11 +1,11 @@
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
-using WeatherUpdate.Models;
-using WeatherUpdate.Utilities;
+using WeatherUpdates.Models;
+using WeatherUpdates.Utilities;
 using System;
 
-namespace WeatherUpdate.Services
+namespace WeatherUpdates.Services
 {
     public class WeatherService : IWeatherService
     {
