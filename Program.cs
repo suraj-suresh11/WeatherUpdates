@@ -1,5 +1,5 @@
 using AspNetCoreRateLimit;
-using WeatherApp.Services;
+using WeatherUpdates.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
