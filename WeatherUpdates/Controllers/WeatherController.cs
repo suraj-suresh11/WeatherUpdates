@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using WeatherUpdates.Services;
+using WeatherUpdates.DTOs;  // Include the namespace for the DTOs
 
 namespace WeatherUpdates.Controllers
 {
@@ -41,7 +42,8 @@ namespace WeatherUpdates.Controllers
             }
         }
 
-         [HttpGet("convert-temperature")]
+        // ConvertTemperature method
+        [HttpGet("convert-temperature")]
         public async Task<IActionResult> ConvertTemperature([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] string toUnit)
         {
             if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180)
@@ -51,7 +53,6 @@ namespace WeatherUpdates.Controllers
 
             try
             {
-          
                 var weatherData = await _weatherService.GetWeatherAsync(latitude, longitude);
 
                 if (weatherData == null)
@@ -61,7 +62,8 @@ namespace WeatherUpdates.Controllers
 
                 double convertedTemperature = _weatherService.ConvertTemperature(weatherData.Temperature, "C", toUnit);
 
-                return Ok(new { ConvertedTemperature = convertedTemperature, Unit = toUnit });
+                // Return the DTO object
+                return Ok(new TemperatureResponse { ConvertedTemperature = convertedTemperature, Unit = toUnit });
             }
             catch (Exception ex)
             {
@@ -69,7 +71,7 @@ namespace WeatherUpdates.Controllers
             }
         }
 
-
+        // GetTemperatureStatistics method
         [HttpGet("temperature-statistics")]
         public async Task<IActionResult> GetTemperatureStatistics([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] int days)
         {
@@ -78,7 +80,9 @@ namespace WeatherUpdates.Controllers
             try
             {
                 var statistics = await _weatherService.GetTemperatureStatisticsAsync(latitude, longitude, days);
-                return Ok(new
+
+                // Return the DTO object
+                return Ok(new TemperatureStatisticsResponse
                 {
                     AverageTemperature = statistics.AverageTemperature,
                     HighestTemperature = statistics.HighestTemperature,
