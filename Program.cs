@@ -8,11 +8,11 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 
 
 builder.Services.AddControllers();
+builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient<IWeatherService, WeatherService>();
 builder.Services.AddScoped<IWeatherService, WeatherService>();
 
 
-builder.Services.AddMemoryCache();
 builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
 builder.Services.Configure<IpRateLimitPolicies>(builder.Configuration.GetSection("IpRateLimitPolicies"));
 builder.Services.AddInMemoryRateLimiting();
@@ -26,5 +26,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseIpRateLimiting();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
