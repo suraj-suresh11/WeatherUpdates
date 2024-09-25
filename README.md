@@ -1,6 +1,6 @@
 # Weather Updates Application
 
-It's weather updates application that provides current weather data, temperature statistics and history, and data visualization for a given lattitude and longtitude. This application was developed on .NET backend and a React frontend, which communicate to fetch and display weather data.
+It's a weather updates application that provides current weather data, temperature statistics and history, and data visualization for a given lattitude and longtitude. This application was developed on .NET backend and a React frontend, which communicate to fetch and display weather data.
 
 ## Table of Contents
 - [Features](#features)
