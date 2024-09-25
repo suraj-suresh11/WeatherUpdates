@@ -47,3 +47,10 @@ $RECYCLE.BIN/
 *.snupkg
 .nuget/
 packages/
+
+# Ignore appsettings files
+appsettings.Development.json
+appsettings.json
+
+# Ignore .env files
+.env

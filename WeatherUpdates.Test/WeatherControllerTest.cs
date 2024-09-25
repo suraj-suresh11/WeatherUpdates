@@ -25,8 +25,8 @@ namespace WeatherUpdates.Tests
         public async Task GetWeather_ReturnsBadRequest_ForInvalidCoordinates()
         {
             // Arrange
-            double invalidLatitude = 100; // Invalid latitude
-            double invalidLongitude = 200; // Invalid longitude
+            double invalidLatitude = 100; 
+            double invalidLongitude = 200; 
 
             // Act
             var result = await _weatherController.GetWeather(invalidLatitude, invalidLongitude);
@@ -87,14 +87,12 @@ namespace WeatherUpdates.Tests
             // Arrange
             double latitude = 40.7128;
             double longitude = -74.0060;
-            var weatherData = new WeatherData { Temperature = 25.0 }; // Celsius
+            var weatherData = new WeatherData { Temperature = 25.0 }; 
 
-            // Set up the mock service to return weather data
             _mockWeatherService
                 .Setup(service => service.GetWeatherAsync(latitude, longitude))
                 .ReturnsAsync(weatherData);
 
-            // Set up the mock service to return the converted temperature
             _mockWeatherService
                 .Setup(service => service.ConvertTemperature(25.0, "C", "F"))
                 .Returns(77.0);
@@ -106,12 +104,8 @@ namespace WeatherUpdates.Tests
             var okResult = Assert.IsType<OkObjectResult>(result);
             var resultValue = okResult.Value as dynamic;
 
-            // If your controller is returning an anonymous object, you can use dynamic
             Assert.Equal(77.0, (double)resultValue.ConvertedTemperature);
 
-            // If your controller is returning a known strongly typed object, replace the dynamic with the expected type:
-            // var resultValue = Assert.IsType<ExpectedResponseType>(okResult.Value)
-            // Assert.Equal(77.0, resultValue.ConvertedTemperature)
         }
 
         [Fact]

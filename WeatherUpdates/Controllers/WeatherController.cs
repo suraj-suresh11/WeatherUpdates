@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using WeatherUpdates.Services;
-using WeatherUpdates.DTOs;  // Include the namespace for the DTOs
+using WeatherUpdates.DTOs;
 
 namespace WeatherUpdates.Controllers
 {
@@ -20,7 +20,7 @@ namespace WeatherUpdates.Controllers
         [HttpGet]
         public async Task<IActionResult> GetWeather([FromQuery] double latitude, [FromQuery] double longitude)
         {
-            if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180)
+            if (!IsValidLatitude(latitude) || !IsValidLongitude(longitude))
             {
                 return BadRequest("Invalid latitude or longitude values.");
             }
@@ -42,13 +42,17 @@ namespace WeatherUpdates.Controllers
             }
         }
 
-        // ConvertTemperature method
         [HttpGet("convert-temperature")]
         public async Task<IActionResult> ConvertTemperature([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] string toUnit)
         {
-            if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180)
+            if (!IsValidLatitude(latitude) || !IsValidLongitude(longitude))
             {
                 return BadRequest("Invalid latitude or longitude values.");
+            }
+
+            if (!IsValidTemperatureUnit(toUnit))
+            {
+                return BadRequest("Invalid temperature unit. Please use 'C', 'F', or 'K'.");
             }
 
             try
@@ -62,7 +66,6 @@ namespace WeatherUpdates.Controllers
 
                 double convertedTemperature = _weatherService.ConvertTemperature(weatherData.Temperature, "C", toUnit);
 
-                // Return the DTO object
                 return Ok(new TemperatureResponse { ConvertedTemperature = convertedTemperature, Unit = toUnit });
             }
             catch (Exception ex)
@@ -71,17 +74,23 @@ namespace WeatherUpdates.Controllers
             }
         }
 
-        // GetTemperatureStatistics method
         [HttpGet("temperature-statistics")]
         public async Task<IActionResult> GetTemperatureStatistics([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] int days)
         {
-            if (days <= 0) return BadRequest("The number of days must be greater than zero.");
+            if (!IsValidLatitude(latitude) || !IsValidLongitude(longitude))
+            {
+                return BadRequest("Invalid latitude or longitude values.");
+            }
+
+            if (days <= 0 || days > 30)
+            {
+                return BadRequest("Invalid number of days. Please provide a value between 1 and 30.");
+            }
 
             try
             {
                 var statistics = await _weatherService.GetTemperatureStatisticsAsync(latitude, longitude, days);
 
-                // Return the DTO object
                 return Ok(new TemperatureStatisticsResponse
                 {
                     AverageTemperature = statistics.AverageTemperature,
@@ -95,20 +104,19 @@ namespace WeatherUpdates.Controllers
             }
         }
 
-        [HttpGet("temperature-chart-data")]
-        public async Task<IActionResult> GetTemperatureChartData([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] int days)
+        private bool IsValidLatitude(double latitude)
         {
-            if (days <= 0) return BadRequest("The number of days must be greater than zero.");
+            return latitude >= -90 && latitude <= 90;
+        }
 
-            try
-            {
-                var statisticsList = await _weatherService.GetTemperatureDataForChartAsync(latitude, longitude, days);
-                return Ok(statisticsList);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"An error occurred: {ex.Message}");
-            }
+        private bool IsValidLongitude(double longitude)
+        {
+            return longitude >= -180 && longitude <= 180;
+        }
+
+        private bool IsValidTemperatureUnit(string unit)
+        {
+            return unit == "C" || unit == "F" || unit == "K";
         }
     }
 }

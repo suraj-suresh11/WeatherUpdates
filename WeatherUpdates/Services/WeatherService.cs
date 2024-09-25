@@ -19,7 +19,7 @@ namespace WeatherUpdates.Services
         {
             _httpClient = httpClient;
             _cache = memoryCache;
-            _apiKey = configuration["WeatherApi:ApiKey"];
+            _apiKey = Environment.GetEnvironmentVariable("WEATHER_API_KEY") ?? configuration["WeatherApi:ApiKey"];
             if (string.IsNullOrEmpty(_apiKey))
             {
                 throw new ArgumentNullException(nameof(_apiKey), "Weather API key is missing in configuration.");
@@ -69,6 +69,10 @@ namespace WeatherUpdates.Services
 
         public async Task<(double AverageTemperature, double HighestTemperature, double LowestTemperature)> GetTemperatureStatisticsAsync(double latitude, double longitude, int days)
         {
+            if (days <= 0)
+            {
+                throw new ArgumentException("Days parameter must be greater than 0.", nameof(days));
+            }
             string cacheKey = $"TemperatureStatistics_{latitude}_{longitude}_{days}";
 
             if (_cache.TryGetValue(cacheKey, out (double AverageTemperature, double HighestTemperature, double LowestTemperature) cachedStatistics))
@@ -102,7 +106,7 @@ namespace WeatherUpdates.Services
                 }
             }
 
-            double averageTemperature = count > 0 ? totalTemperature / count : 0;
+            double averageTemperature = count > 0 ? Math.Round(totalTemperature / count, 2) : 0; 
             var statistics = (AverageTemperature: averageTemperature, HighestTemperature: highestTemperature, LowestTemperature: lowestTemperature);
             _cache.Set(cacheKey, statistics, _cacheDuration);
 

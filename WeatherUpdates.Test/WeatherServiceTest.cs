@@ -27,7 +27,6 @@ namespace WeatherUpdates.Tests
             _mockMemoryCache = new Mock<IMemoryCache>();
             _mockConfiguration = new Mock<IConfiguration>();
 
-            // Set up a dummy API key
             _mockConfiguration.Setup(config => config["WeatherApi:ApiKey"]).Returns("dummy-api-key");
 
             _httpClient = new HttpClient(_mockHttpMessageHandler.Object);
@@ -41,7 +40,6 @@ namespace WeatherUpdates.Tests
             double latitude = 0;
             double longitude = 0;
 
-            // Mock the HTTP response to simulate weather data not found
             var response = new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
             _mockHttpMessageHandler
                 .Protected()

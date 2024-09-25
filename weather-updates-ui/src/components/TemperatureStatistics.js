@@ -13,7 +13,6 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
-// Register required components for Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const TemperatureStatistics = () => {
@@ -93,29 +92,29 @@ const TemperatureStatistics = () => {
               }}
               options={{
                 responsive: true,
-                maintainAspectRatio: false, // Important to prevent distortion
+                maintainAspectRatio: false, 
                 plugins: {
                   legend: {
                     labels: {
-                      color: '#fff', // Legend text color
+                      color: '#fff', 
                     },
                   },
                 },
                 scales: {
                   x: {
                     ticks: {
-                      color: '#fff', // X-axis labels color
+                      color: '#fff', 
                     },
                     grid: {
-                      display: false, // Optionally remove the grid lines
+                      display: false, 
                     },
                   },
                   y: {
                     ticks: {
-                      color: '#fff', // Y-axis labels color
+                      color: '#fff', 
                     },
                     grid: {
-                      color: 'rgba(255, 255, 255, 0.1)', // Y-axis grid line color
+                      color: 'rgba(255, 255, 255, 0.1)', 
                     },
                   },
                 },

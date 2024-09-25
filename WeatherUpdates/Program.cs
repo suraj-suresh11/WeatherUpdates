@@ -1,7 +1,10 @@
 using AspNetCoreRateLimit;
 using WeatherUpdates.Services;
+using DotNetEnv; 
 
 var builder = WebApplication.CreateBuilder(args);
+
+DotNetEnv.Env.Load();
 
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
