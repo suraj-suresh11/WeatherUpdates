@@ -95,7 +95,7 @@ The backend provides the following endpoints:
     ```bash
     npm start
     ```
-   The frontend will start running at `http://localhost:3000` (or another port if 3000 is already in use).
+   The frontend will start running at `http://localhost:3001`.
 
 
 
@@ -115,6 +115,6 @@ The backend provides the following endpoints:
     npm start
     ```
 
-You should now be able to access the application at `http://localhost:3000`.
+You should now be able to access the application at `http://localhost:3001`.
 
 
