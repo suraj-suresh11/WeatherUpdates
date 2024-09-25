@@ -108,5 +108,36 @@ namespace WeatherUpdates.Services
 
             return statistics;
         }
+
+        public async Task<List<WeatherData>> GetTemperatureDataForChartAsync(double latitude, double longitude, int days)
+        {
+            var temperatureDataList = new List<WeatherData>();
+
+            for (int i = 0; i < days; i++)
+            {
+                var url = $"https://api.weatherbit.io/v2.0/history/daily?lat={latitude}&lon={longitude}&key={_apiKey}&start_date={DateTime.Now.AddDays(-i - 1):yyyy-MM-dd}&end_date={DateTime.Now.AddDays(-i):yyyy-MM-dd}";
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = await response.Content.ReadAsStringAsync();
+                    var weatherApiResponse = JsonConvert.DeserializeObject<WeatherApiResponse>(responseData);
+
+                    if (weatherApiResponse?.Data != null && weatherApiResponse.Data.Count > 0)
+                    {
+                        var apiData = weatherApiResponse.Data[0];
+                        var weatherData = new WeatherData
+                        {
+                            Temperature = apiData.Temp,
+                            Humidity = apiData.Rh,
+                            WindSpeed = apiData.Wind_spd,
+                            WeatherDescription = apiData.Weather.Description
+                        };
+                        temperatureDataList.Add(weatherData);
+                    }
+                }
+            }
+            return temperatureDataList;
+        }
     }
 }

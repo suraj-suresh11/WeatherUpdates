@@ -20,13 +20,25 @@ builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>()
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3001")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
-
+app.UseCors("AllowReactApp");
 app.UseIpRateLimiting();
 app.UseAuthorization();
 app.MapControllers();

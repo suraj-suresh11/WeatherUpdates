@@ -94,5 +94,21 @@ namespace WeatherUpdates.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
+        [HttpGet("temperature-chart-data")]
+        public async Task<IActionResult> GetTemperatureChartData([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] int days)
+        {
+            if (days <= 0) return BadRequest("The number of days must be greater than zero.");
+
+            try
+            {
+                var statisticsList = await _weatherService.GetTemperatureDataForChartAsync(latitude, longitude, days);
+                return Ok(statisticsList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
     }
 }
