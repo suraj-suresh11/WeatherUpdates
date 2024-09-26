@@ -131,7 +131,6 @@ The frontend and backend services have been deployed on the cloud hosting platfo
 
 ### Deployed URL:
 [Weather Updates App](https://weatherupdates-1.onrender.com/)
-
-
-
+**Note:** The backend is hosted on Render's free tier, which means that the service will "spin down" when inactive. This can lead to a delay of around 50 seconds or more when making the first request after a period of inactivity. Please be patient when using the application, as this delay is due to the limitations of the free tier service on Render. Once the service is active, subsequent requests should be faster.
+Thank you
 
