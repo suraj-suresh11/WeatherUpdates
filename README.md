@@ -12,6 +12,7 @@ It's a weather updates application that provides current weather data, temperatu
   - [Backend Setup](#backend-setup)
   - [Frontend Setup](#frontend-setup)
 - [Running the Project](#running-the-project)
+- [App Deployment](#App-Deployment)
 
 ## Features
 - Displays current weather data(Temperature, Humidity, Wind Speed, Description) for any location based on latitude and longitude.
@@ -117,4 +118,7 @@ The backend provides the following endpoints:
 
 You should now be able to access the application at `http://localhost:3001`.
 
-
+## App Deployment
+I have deployed the frontend and backend services on a cloud hosting platform called **Render**.
+URL:https://weatherupdates-1.onrender.com/
+You can access the full application on the above URL.
