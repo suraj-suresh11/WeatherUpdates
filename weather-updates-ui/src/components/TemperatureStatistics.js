@@ -1,4 +1,3 @@
-// src/components/TemperatureStatistics.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import {
@@ -12,6 +11,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+
 // Registering Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -22,11 +22,12 @@ const TemperatureStatistics = () => {
   const [days, setDays] = useState(7);
   const [temperatureData, setTemperatureData] = useState(null);
   const [error, setError] = useState('');
+
   // Function to get temperature statistics
   const fetchTemperatureStatistics = async () => {
     try {
       // API call to fetch temperature statistics
-      const response = await axios.get(`http://localhost:5092/weather/temperature-statistics`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/weather/temperature-statistics`, {
         params: {
           latitude: latitude,
           longitude: longitude,
@@ -69,11 +70,11 @@ const TemperatureStatistics = () => {
       {temperatureData && (
         <div style={{ width: '600px', margin: '0 auto', padding: '20px', backgroundColor: '#333', borderRadius: '10px' }}>
           <h3 style={{ color: '#fff' }}>Temperature Data:</h3>
-          <p style={{ color: '#fff' }}>Average Temperature: {temperatureData.averageTemperature} °C</p>
+          <p style={{ color: '#fff' }}>Average Temperature: {temperatureData.averageTemperature.toFixed(2)} °C</p>
           <p style={{ color: '#fff' }}>Highest Temperature: {temperatureData.highestTemperature} °C</p>
           <p style={{ color: '#fff' }}>Lowest Temperature: {temperatureData.lowestTemperature} °C</p>
 
-          <div style={{ position: 'relative', height: '400px', width: '600px', margin: '0 auto' }}> {/* Container to control chart size */}
+          <div style={{ position: 'relative', height: '400px', width: '600px', margin: '0 auto' }}>
             <Line
               data={{
                 labels: ['Lowest', 'Average', 'Highest'],
