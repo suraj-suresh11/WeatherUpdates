@@ -1,9 +1,8 @@
-// src/components/Weather.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
 const Weather = () => {
-  // State variables to store user input and fetched weather data
+  // State variables
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [weatherData, setWeatherData] = useState(null);
@@ -12,7 +11,7 @@ const Weather = () => {
   // Function to fetch weather data from the backend API
   const fetchWeather = async () => {
     try {
-      const response = await axios.get(`http://localhost:5092/weather`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/weather`, {
         params: {
           latitude: latitude,
           longitude: longitude,
@@ -47,7 +46,7 @@ const Weather = () => {
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {weatherData && (
-        <div>
+        <div style={{ width: '600px', margin: '0 auto', padding: '20px', backgroundColor: '#333', borderRadius: '10px', color: '#fff' }}>
           <h3>Weather Data:</h3>
           <p>Temperature: {weatherData.temperature} °C</p>
           <p>Humidity: {weatherData.humidity} %</p>
