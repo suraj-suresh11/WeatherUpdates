@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const Weather = () => {
+  // State variables to store user input and fetched weather data
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState('');
 
+  // Function to fetch weather data from the backend API
   const fetchWeather = async () => {
     try {
       const response = await axios.get(`http://localhost:5092/weather`, {
@@ -19,6 +21,7 @@ const Weather = () => {
       setWeatherData(response.data);
       setError('');
     } catch (error) {
+      // Handle errors 
       setWeatherData(null);
       setError('Error fetching weather data. Please check your inputs or try again later.');
     }

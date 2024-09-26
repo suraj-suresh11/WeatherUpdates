@@ -12,18 +12,20 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-
+// Registering Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const TemperatureStatistics = () => {
+  // State variables
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [days, setDays] = useState(7);
   const [temperatureData, setTemperatureData] = useState(null);
   const [error, setError] = useState('');
-
+  // Function to get temperature statistics
   const fetchTemperatureStatistics = async () => {
     try {
+      // API call to fetch temperature statistics
       const response = await axios.get(`http://localhost:5092/weather/temperature-statistics`, {
         params: {
           latitude: latitude,

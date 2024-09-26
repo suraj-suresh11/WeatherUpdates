@@ -12,14 +12,16 @@ namespace WeatherUpdates.Controllers
     {
         private readonly IWeatherService _weatherService;
 
+        // DI of IWeatherService
         public WeatherController(IWeatherService weatherService)
         {
             _weatherService = weatherService;
         }
-
+        // Endpoint to fetch current weather data
         [HttpGet]
         public async Task<IActionResult> GetWeather([FromQuery] double latitude, [FromQuery] double longitude)
         {
+            // Validate latitude and longitude values
             if (!IsValidLatitude(latitude) || !IsValidLongitude(longitude))
             {
                 return BadRequest("Invalid latitude or longitude values.");
@@ -27,6 +29,7 @@ namespace WeatherUpdates.Controllers
 
             try
             {
+                // Fetch weather data using the weather service
                 var weatherData = await _weatherService.GetWeatherAsync(latitude, longitude);
 
                 if (weatherData == null)
@@ -41,7 +44,7 @@ namespace WeatherUpdates.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
-
+        // Endpoint to convert the current temperature to a specified unit.
         [HttpGet("convert-temperature")]
         public async Task<IActionResult> ConvertTemperature([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] string toUnit)
         {
@@ -57,13 +60,14 @@ namespace WeatherUpdates.Controllers
 
             try
             {
+                // Fetch weather data for the given location
                 var weatherData = await _weatherService.GetWeatherAsync(latitude, longitude);
 
                 if (weatherData == null)
                 {
                     return NotFound("Weather data not found for the specified location.");
                 }
-
+                // Convert the temperature from Celsius to the requested unit
                 double convertedTemperature = _weatherService.ConvertTemperature(weatherData.Temperature, "C", toUnit);
 
                 return Ok(new TemperatureResponse { ConvertedTemperature = convertedTemperature, Unit = toUnit });
@@ -73,7 +77,7 @@ namespace WeatherUpdates.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
-
+        // Endpoint to get temperature statistics 
         [HttpGet("temperature-statistics")]
         public async Task<IActionResult> GetTemperatureStatistics([FromQuery] double latitude, [FromQuery] double longitude, [FromQuery] int days)
         {
@@ -103,7 +107,7 @@ namespace WeatherUpdates.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
-
+        // Helper methods to validate latitude and longitude values 
         private bool IsValidLatitude(double latitude)
         {
             return latitude >= -90 && latitude <= 90;
@@ -113,7 +117,7 @@ namespace WeatherUpdates.Controllers
         {
             return longitude >= -180 && longitude <= 180;
         }
-
+        // Helper method to validate temperature units
         private bool IsValidTemperatureUnit(string unit)
         {
             return unit == "C" || unit == "F" || unit == "K";

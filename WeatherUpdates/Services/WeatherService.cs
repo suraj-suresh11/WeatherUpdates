@@ -14,28 +14,31 @@ namespace WeatherUpdates.Services
         private readonly IMemoryCache _cache;
         private readonly string _apiKey;
         private readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(5);
-
+        // Constructor that initializes the HttpClient, MemoryCache, and API key from environment variables or configuration
         public WeatherService(HttpClient httpClient, IMemoryCache memoryCache, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _cache = memoryCache;
             _apiKey = Environment.GetEnvironmentVariable("WEATHER_API_KEY") ?? configuration["WeatherApi:ApiKey"];
+            // Check if the API key is missing
             if (string.IsNullOrEmpty(_apiKey))
             {
                 throw new ArgumentNullException(nameof(_apiKey), "Weather API key is missing in configuration.");
             }
         }
-
+        // Method to fetch current weather data
         public async Task<WeatherData?> GetWeatherAsync(double latitude, double longitude)
         {
+            // Create a unique cache key based on latitude and longitude
             string cacheKey = $"WeatherData_{latitude}_{longitude}";
+            // Check if the weather data is already available in the cache
             if (_cache.TryGetValue(cacheKey, out WeatherData cachedWeatherData))
             {
                 return cachedWeatherData;
             }
             var url = $"https://api.weatherbit.io/v2.0/current?lat={latitude}&lon={longitude}&key={_apiKey}";
             var response = await _httpClient.GetAsync(url);
-
+            // Check if the API request was successful
             if (response.IsSuccessStatusCode)
             {
                 var responseData = await response.Content.ReadAsStringAsync();
@@ -61,12 +64,12 @@ namespace WeatherUpdates.Services
 
             return null;
         }
-
+        // Method to convert temperature from one unit to another
         public double ConvertTemperature(double temperature, string fromUnit, string toUnit)
         {
             return TemperatureConverter.ConvertTemperature(temperature, fromUnit, toUnit);
         }
-
+        // Method to fetch average, highest, and lowest temperatures
         public async Task<(double AverageTemperature, double HighestTemperature, double LowestTemperature)> GetTemperatureStatisticsAsync(double latitude, double longitude, int days)
         {
             if (days <= 0)
@@ -105,14 +108,14 @@ namespace WeatherUpdates.Services
                     }
                 }
             }
-
+            // Calculate average temperature if data is available
             double averageTemperature = count > 0 ? Math.Round(totalTemperature / count, 2) : 0; 
             var statistics = (AverageTemperature: averageTemperature, HighestTemperature: highestTemperature, LowestTemperature: lowestTemperature);
             _cache.Set(cacheKey, statistics, _cacheDuration);
 
             return statistics;
         }
-
+        // Method to fetch temperature data for visualization
         public async Task<List<WeatherData>> GetTemperatureDataForChartAsync(double latitude, double longitude, int days)
         {
             var temperatureDataList = new List<WeatherData>();
@@ -141,7 +144,7 @@ namespace WeatherUpdates.Services
                     }
                 }
             }
-            return temperatureDataList;
+            return temperatureDataList; // Return the list of temperature data for visualization
         }
     }
 }
