@@ -1,6 +1,7 @@
 // src/components/Weather.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners';
 
 const Weather = () => {
   // State variables
@@ -10,9 +11,11 @@ const Weather = () => {
   const [error, setError] = useState('');
   const [convertedTemperature, setConvertedTemperature] = useState(null);
   const [unit, setUnit] = useState('C'); 
+  const [loading, setLoading] = useState(false);
 
   // Function to fetch weather data from the backend API
   const fetchWeather = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/weather`, {
         params: {
@@ -28,6 +31,7 @@ const Weather = () => {
       setWeatherData(null);
       setError('Error fetching weather data. Please check your inputs or try again later.');
     }
+    setLoading(false); 
   };
 
   // Function to convert the temperature
@@ -41,7 +45,7 @@ const Weather = () => {
           toUnit: targetUnit,
         },
       });
-      setConvertedTemperature(response.data.convertedTemperature);
+      setConvertedTemperature(response.data.convertedTemperature.toFixed(2));
       setUnit(response.data.unit);
     } catch (error) {
       setError('Error converting temperature. Please try again later.');
@@ -64,6 +68,7 @@ const Weather = () => {
         onChange={(e) => setLongitude(e.target.value)}
       />
       <button onClick={fetchWeather}>Get Weather</button>
+      {loading && <ClipLoader color="#36d7b7" size={50} />} 
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 

@@ -11,7 +11,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-
+import { ClipLoader } from 'react-spinners';
 // Registering Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -22,9 +22,11 @@ const TemperatureStatistics = () => {
   const [days, setDays] = useState(7);
   const [temperatureData, setTemperatureData] = useState(null);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // Function to get temperature statistics
   const fetchTemperatureStatistics = async () => {
+    setLoading(true);
     try {
       // API call to fetch temperature statistics
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/weather/temperature-statistics`, {
@@ -40,6 +42,7 @@ const TemperatureStatistics = () => {
       setTemperatureData(null);
       setError('Error fetching temperature statistics. Please try again later.');
     }
+    setLoading(false);
   };
 
   return (
@@ -64,6 +67,7 @@ const TemperatureStatistics = () => {
         onChange={(e) => setDays(e.target.value)}
       />
       <button onClick={fetchTemperatureStatistics}>Get Statistics</button>
+      {loading && <ClipLoader color="#36d7b7" size={50} />}
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
