@@ -3,7 +3,6 @@
 It's a weather updates application that provides current weather data, temperature statistics, and history, as well as data visualization for a given latitude and longitude. This application was developed using a .NET backend and a React frontend, which communicate to fetch and display weather data.
 
 ## Table of Contents
-- [Introduction](#introduction)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Prerequisites](#prerequisites)
@@ -16,8 +15,6 @@ It's a weather updates application that provides current weather data, temperatu
 - [Testing the Project](#testing-the-project)
 - [App Deployment](#app-deployment)
 
-## Introduction
-This Weather Updates Application allows users to fetch current weather data and visualize temperature statistics based on latitude and longitude. It fetches data from the Weatherbit API and displays it in a user-friendly way using React.
 
 ## Features
 - Displays current weather data (Temperature, Humidity, Wind Speed, Description) for any location based on latitude and longitude.
@@ -129,17 +126,12 @@ You should now be able to access the application at `http://localhost:3001`.
     dotnet test
     ```
 
-### Frontend Testing
-1. Ensure you are in the `weather-updates-ui` directory.
-2. Run:
-    ```bash
-    npm test
-    ```
-
 ## App Deployment
 The frontend and backend services have been deployed on the cloud hosting platform **Render**. 
 
 ### Deployed URL:
 [Weather Updates App](https://weatherupdates-1.onrender.com/)
+
+
 
 
