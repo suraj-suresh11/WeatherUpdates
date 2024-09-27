@@ -5,8 +5,8 @@ import { ClipLoader } from 'react-spinners';
 
 const Weather = () => {
   // State variables
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
+  const [latitude, setLatitude] = useState('12.9716');
+  const [longitude, setLongitude] = useState('77.5946');
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState('');
   const [convertedTemperature, setConvertedTemperature] = useState(null);
@@ -74,7 +74,7 @@ const Weather = () => {
 
       {weatherData && (
         <div style={{ backgroundColor: '#333', padding: '20px', borderRadius: '10px', color: '#fff', marginTop: '20px' }}>
-          <h3>Weather Data:</h3>
+          <h3>Weather Data: {weatherData.cityName}</h3>
           <p>Temperature: {convertedTemperature !== null ? `${convertedTemperature} ${unit}` : `${weatherData.temperature} °C`}</p>
           <p>Humidity: {weatherData.humidity} %</p>
           <p>Wind Speed: {weatherData.windSpeed} m/s</p>

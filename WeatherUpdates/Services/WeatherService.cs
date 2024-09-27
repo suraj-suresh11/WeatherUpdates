@@ -53,7 +53,8 @@ namespace WeatherUpdates.Services
                         Temperature = apiData.Temp,
                         Humidity = apiData.Rh,
                         WindSpeed = apiData.Wind_spd,
-                        WeatherDescription = apiData.Weather.Description
+                        WeatherDescription = apiData.Weather.Description,
+                        CityName = apiData.city_name
                     };
 
                     _cache.Set(cacheKey, weatherData, _cacheDuration);

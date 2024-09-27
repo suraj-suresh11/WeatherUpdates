@@ -16,9 +16,9 @@ import { ClipLoader } from 'react-spinners';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const TemperatureStatistics = () => {
-  // State variables
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
+  // State variables with default Bangalore latitude and longitude
+  const [latitude, setLatitude] = useState('12.9716');
+  const [longitude, setLongitude] = useState('77.5946');
   const [days, setDays] = useState(7);
   const [temperatureData, setTemperatureData] = useState(null);
   const [error, setError] = useState('');

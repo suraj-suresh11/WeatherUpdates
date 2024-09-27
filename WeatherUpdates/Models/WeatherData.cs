@@ -21,5 +21,6 @@ namespace WeatherUpdates.Models
         /// Gets or sets a brief description of the weather (e.g., "Sunny", "Cloudy", "Rainy").
         /// </summary>
         public string WeatherDescription { get; set; } = string.Empty;
+        public string CityName { get; set; } = string.Empty;
     }
 }

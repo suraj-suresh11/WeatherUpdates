@@ -33,6 +33,8 @@ namespace WeatherUpdates.Models
         /// Contains a description of the weather.
         /// </summary>
         public WeatherDescription Weather { get; set; } = new WeatherDescription();
+
+        public string city_name { get; set; }
     }
     /// <summary>
     /// Represents a description of the weather condition.
