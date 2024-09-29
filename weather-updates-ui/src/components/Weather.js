@@ -1,10 +1,9 @@
 // src/components/Weather.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ClipLoader } from 'react-spinners';
 
 const Weather = () => {
-  // State variables
   const [latitude, setLatitude] = useState('12.9716');
   const [longitude, setLongitude] = useState('77.5946');
   const [weatherData, setWeatherData] = useState(null);
@@ -25,65 +24,114 @@ const Weather = () => {
       });
       setWeatherData(response.data);
       setError('');
-      setConvertedTemperature(null); 
+
+      // Fetch the converted temperature based on the selected unit
+      if (unit !== 'C') {
+        const conversionResponse = await axios.get(`${process.env.REACT_APP_API_URL}/weather/convert-temperature`, {
+          params: {
+            latitude: latitude,
+            longitude: longitude,
+            toUnit: unit,
+          },
+        });
+        setConvertedTemperature(conversionResponse.data.convertedTemperature.toFixed(2));
+      } else {
+        setConvertedTemperature(response.data.temperature.toFixed(2)); 
+      }
     } catch (error) {
-      // Handle errors 
       setWeatherData(null);
       setError('Error fetching weather data. Please check your inputs or try again later.');
     }
     setLoading(false); 
   };
 
-  // Function to convert the temperature
-  const convertTemperature = async (targetUnit) => {
-    if (!weatherData) return;
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/weather/convert-temperature`, {
-        params: {
-          latitude: latitude,
-          longitude: longitude,
-          toUnit: targetUnit,
-        },
-      });
-      setConvertedTemperature(response.data.convertedTemperature.toFixed(2));
-      setUnit(response.data.unit);
-    } catch (error) {
-      setError('Error converting temperature. Please try again later.');
-    }
-  };
+  // useEffect to fetch converted temperature whenever the unit changes
+  useEffect(() => {
+    const fetchConvertedTemperature = async () => {
+      if (weatherData && unit !== 'C') {
+        try {
+          const conversionResponse = await axios.get(`${process.env.REACT_APP_API_URL}/weather/convert-temperature`, {
+            params: {
+              latitude: latitude,
+              longitude: longitude,
+              toUnit: unit,
+            },
+          });
+          setConvertedTemperature(conversionResponse.data.convertedTemperature.toFixed(2));
+        } catch (error) {
+          setError('Error converting temperature. Please try again later.');
+        }
+      } else if (weatherData) {
+        setConvertedTemperature(weatherData.temperature.toFixed(2));
+      }
+    };
+
+    fetchConvertedTemperature();
+  }, [unit, weatherData, latitude, longitude]);
 
   return (
-    <div>
-      <h2>Weather Information</h2>
-      <input
-        type="text"
-        placeholder="Enter Latitude"
-        value={latitude}
-        onChange={(e) => setLatitude(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Enter Longitude"
-        value={longitude}
-        onChange={(e) => setLongitude(e.target.value)}
-      />
-      <button onClick={fetchWeather}>Get Weather</button>
+    <div className="container weather-container">
+      <h2 className="title">Weather Information</h2>
+      <div className="input-section">
+        <input
+          type="text"
+          className="input"
+          placeholder="Enter Latitude"
+          value={latitude}
+          onChange={(e) => setLatitude(e.target.value)}
+        />
+        <input
+          type="text"
+          className="input"
+          placeholder="Enter Longitude"
+          value={longitude}
+          onChange={(e) => setLongitude(e.target.value)}
+        />
+      </div>
+
+      {/* Radio buttons */}
+      <div className="radio-section">
+        <label>
+          <input
+            type="radio"
+            value="C"
+            checked={unit === 'C'}
+            onChange={() => setUnit('C')}
+          />
+          Celsius (°C)
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="F"
+            checked={unit === 'F'}
+            onChange={() => setUnit('F')}
+          />
+          Fahrenheit (°F)
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="K"
+            checked={unit === 'K'}
+            onChange={() => setUnit('K')}
+          />
+          Kelvin (K)
+        </label>
+      </div>
+
+      <button className="button" onClick={fetchWeather}>Get Weather</button>
       {loading && <ClipLoader color="#36d7b7" size={50} />} 
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {weatherData && (
-        <div style={{ backgroundColor: '#333', padding: '20px', borderRadius: '10px', color: '#fff', marginTop: '20px' }}>
+        <div className="data-card">
           <h3>Weather Data: {weatherData.cityName}</h3>
-          <p>Temperature: {convertedTemperature !== null ? `${convertedTemperature} ${unit}` : `${weatherData.temperature} °C`}</p>
+          <p>Temperature: {convertedTemperature} {unit}</p> 
           <p>Humidity: {weatherData.humidity} %</p>
           <p>Wind Speed: {weatherData.windSpeed} m/s</p>
           <p>Description: {weatherData.weatherDescription}</p>
-
-          {/* Temperature conversion buttons */}
-          <button onClick={() => convertTemperature('C')}>Convert to Celsius</button>
-          <button onClick={() => convertTemperature('F')}>Convert to Fahrenheit</button>
-          <button onClick={() => convertTemperature('K')}>Convert to Kelvin</button>
         </div>
       )}
     </div>
